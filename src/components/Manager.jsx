@@ -1,34 +1,34 @@
 import React, { useEffect } from 'react'
-import { useRef,useState } from 'react';
+import { useRef, useState } from 'react';
 
 const Manager = () => {
     const ref = useRef();
-    const [form, setForm] = useState({site:"",username:"",password:""})
+    const [form, setForm] = useState({ site: "", username: "", password: "" })
     const [passwordsArray, setpasswordsArray] = useState([])
 
     useEffect(() => {
-        let passwords=localStorage.getItem("passwords")
-        if(passwords) {
+        let passwords = localStorage.getItem("passwords")
+        if (passwords) {
             setpasswordsArray(JSON.parse(passwords));
         }
-    },[])
+    }, [])
 
     const showPassword = () => {
         alert("Show Password");
-        if(ref.current.src.includes("/view-off-slash-stroke-rounded.svg")) {
-        ref.current.src = "/eye-stroke-rounded.svg";
-    }
+        if (ref.current.src.includes("/view-off-slash-stroke-rounded.svg")) {
+            ref.current.src = "/eye-stroke-rounded.svg";
+        }
         else {
             ref.current.src = "/view-off-slash-stroke-rounded.svg";
         }
     }
     const savePassword = () => {
-         setpasswordsArray([...passwordsArray,form])
-         localStorage.setItem("password",JSON.stringify(...passwordsArray,form))
+        setpasswordsArray([...passwordsArray, form])
+        localStorage.setItem("password", JSON.stringify(...passwordsArray, form))
     }
 
     const handleChange = (e) => {
-        setForm({...form,[e.target.name]:e.target.value})
+        setForm({ ...form, [e.target.name]: e.target.value })
     }
     return (
         <>
@@ -44,12 +44,12 @@ const Manager = () => {
                 <div className="flex flex-col p-4 gap-6 items-center">
                     <input value={form.site} onChange={handleChange} name='site' placeholder='Enter website URL ' className='rounded-lg w-full border border-amber-700 focus:outline-none px-3 py-1' type="text" />
                     <div className="flex w-full justify-between gap-4">
-                        <input value={form.username} onChange={handleChange} placeholder='EnterUsername' name='username' className='flex-1 rounded-lg border border-amber-700 focus:outline-none px-3 py-1' type="text"/>
-                        <div className="relative cursor-pointer"> 
-                        <input value={form.password} onChange={handleChange} name='password' placeholder='Enter Password' className='flex-1 rounded-lg border border-amber-700 focus:outline-none px-3 py-1' type="text" />
-                        <span className='absolute right-0 top-0' onClick={showPassword}>
-                            <img ref={ref} className='p-1' width={32} src="/eye-stroke-rounded.svg" alt="eye"/>
-                        </span>
+                        <input value={form.username} onChange={handleChange} placeholder='EnterUsername' name='username' className='flex-1 rounded-lg border border-amber-700 focus:outline-none px-3 py-1' type="text" />
+                        <div className="relative cursor-pointer">
+                            <input value={form.password} onChange={handleChange} name='password' placeholder='Enter Password' className='flex-1 rounded-lg border border-amber-700 focus:outline-none px-3 py-1' type="text" />
+                            <span className='absolute right-0 top-0' onClick={showPassword}>
+                                <img ref={ref} className='p-1' width={32} src="/eye-stroke-rounded.svg" alt="eye" />
+                            </span>
                         </div>
                     </div>
                     <button onClick={savePassword} className=' text-black cursor-pointer flex justify-center items-center w-fit rounded-full bg-amber-700 px-4 py-1 hover:border hover:bg-amber-600'>
@@ -57,7 +57,30 @@ const Manager = () => {
                             src="https://cdn.lordicon.com/jgnvfzqg.json"
                             trigger="hover">
                         </lord-icon>Add Password</button>
-
+                </div>
+                <div className="passwords">
+                    <h2 className='font-bold py-3 text-xl'>Your Passwords</h2>
+                    {passwordsArray.length === 0 ? <p className='text-center'>No passwords saved yet</p> : null}
+                    { passwordsArray.length!=0 && <table className="table-auto w-full rounded-xl overflow-hidden">
+                        <thead className='bg-amber-700 text-white'>
+                            <tr>
+                                <th className='py-2'>Site</th>
+                                <th className='py-2'>Username</th>
+                                <th className='py-2'>Passwords</th>
+                            </tr>
+                        </thead>
+                        <tbody className='bg-slate-100'>
+                            {passwordsArray.map((item,index)=>{
+                                return (
+                                    <tr key={index}>
+                                        <td className='py-2 text-center w-32'><a href={item.site} target='_blank'>{item.site}</a></td>
+                                        <td className='py-2 text-center w-32'>{item.username}</td>
+                                        <td className='py-2 text-center w-32'>{item.password}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>}
                 </div>
             </div>
         </>
